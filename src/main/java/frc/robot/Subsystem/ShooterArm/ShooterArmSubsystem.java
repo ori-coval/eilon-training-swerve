@@ -24,9 +24,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmConstants{
   //
   private TalonFX m_shooterArmMotor;
-  private static ShooterArmSubsystem instance;
   private double targetPose = 0;
-
+  
+  private static ShooterArmSubsystem instance;
   public static ShooterArmSubsystem getInstance(){
     if (instance == null)
       instance = new ShooterArmSubsystem();
