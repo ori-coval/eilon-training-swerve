@@ -68,7 +68,7 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
     configuration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     StatusCode statusCode = StatusCode.StatusCodeNotInitialized;
 
-    //upload to motor
+    //upload configs to motor
     for (int i = 0; i < 5; i++){
       statusCode = m_shooterArmMotor.getConfigurator().apply(configuration);
       if (statusCode.isOK())

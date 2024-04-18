@@ -28,13 +28,10 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
   private ClimbSubsystem() {
     m_rightMotor = new CANSparkMax(M_CLIMBINGRIGHT_MOTOR_ID, MotorType.kBrushless);
     m_leftMotor = new CANSparkMax(M_CLIMBINGLEFT_MOTOR_ID, MotorType.kBrushless);
-    m_leftMotor.setInverted(false); //TODO: understand
+    m_leftMotor.setInverted(false);
     m_rightMotor.setInverted(true);
   }
   
-  @Override
-  public void periodic() {}
-
   /**
    * set the speed of both motors
    * @param speed electrecity between -1 to 1 
@@ -59,4 +56,7 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
   public void setLeftSpeed(double speed){
     m_leftMotor.set(speed);
   }
+  
+  @Override
+  public void periodic() {}
 }
