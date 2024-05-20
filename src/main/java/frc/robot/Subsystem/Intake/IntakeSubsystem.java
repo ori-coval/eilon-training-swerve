@@ -1,27 +1,29 @@
 /**
  * This subsystem is resposible for the "intake"
- * @arthur Eilon.h
- * @Version 2.0.0
+ * @arthor Eilon.h
+ * @Version 2.1.0
  */
 
 package frc.robot.Subsystem.Intake;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   private TalonFX m_motor;
   private DigitalInput m_opticSensor;
-
-  private VoltageOut voltageOut = new VoltageOut(0, false, true, false, false);
-
+  private TorqueCurrentFOC currentFOC = new TorqueCurrentFOC(0);
+  
   private static IntakeSubsystem instance; //singelton
   public static IntakeSubsystem getInstance(){
     if (instance == null){
@@ -57,11 +59,20 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
 
   /**
    * Set the speed of the intake
-   * @param voltage amount of voltage
+   * @param Current amount of voltage
    */
-  public void setSpeed(double voltage){
-    m_motor.setControl(voltageOut.withOutput(voltage));
+  public Command setCurrent(double current){
+    return runOnce(() -> m_motor.setControl(currentFOC.withOutput(current)));
   }
+
+  /**
+   * set the speed without FOC
+   * @param speed
+   * @return
+   */
+   public Command setSpeed(double speed){
+    return runOnce(() -> m_motor.set(speed));
+   }
 
    /**
     * Cheks if the sensor is true or false
@@ -80,11 +91,19 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   }
 
   /**
-   * If the motor is at shooting speed
-   * @return if the motor is at shooting speed
+   * feed the intake
+   * @return
    */
-  public boolean atShootSpeed(){
-    return getVelocity() >= SHOOTING_SPEED;
+  public Command intakeCommand(){
+    return runEnd(() -> setCurrent(INTAKE_CURRENT),() -> m_motor.stopMotor()).until(() -> getOpticSensorValue());
+  }
+
+  /**
+   * feed the shooter
+   * @return
+   */
+  public Command feedShooterCommand(){
+    return runEnd(() -> setCurrent(FEED_SHOOTER_CURRENT),() -> m_motor.stopMotor()).withTimeout(FEED_SHOOTER_TIME);
   }
 
 

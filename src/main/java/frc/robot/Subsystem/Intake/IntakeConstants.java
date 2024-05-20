@@ -15,5 +15,7 @@ public interface IntakeConstants {
     InvertedValue MOTOR_DIRECTION = InvertedValue.CounterClockwise_Positive;
     NeutralModeValue NEUTRAL_MODE_VALUE = NeutralModeValue.Brake;
 
-    double SHOOTING_SPEED = 0;
+    double INTAKE_CURRENT= 0;
+    double FEED_SHOOTER_CURRENT = 0;
+    double FEED_SHOOTER_TIME = 0;
 }
