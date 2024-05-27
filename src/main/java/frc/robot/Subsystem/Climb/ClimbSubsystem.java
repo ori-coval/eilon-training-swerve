@@ -1,7 +1,7 @@
 /**
  * This subsystem is resposible for the "climbing"
  * @arthur Eilon.h
- * @Version 2.1.1
+ * @Version 2.1.2
  */
 
 
@@ -36,6 +36,9 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
     m_leftMotor = new CANSparkMax(M_CLIMBINGLEFT_MOTOR_ID, MotorType.kBrushless);
     m_leftMotor.setInverted(false);
     m_rightMotor.setInverted(true);
+
+    m_rightMotor.setSmartCurrentLimit(R_CURRENT_LIMIT);
+    m_leftMotor.setSmartCurrentLimit(L_CURRENT_LIMIT);
   }
   
   /**
