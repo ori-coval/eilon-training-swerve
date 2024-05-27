@@ -1,7 +1,7 @@
 /**
  * This subsystem is resposible for the "climbing"
  * @arthur Eilon.h
- * @Version 2.1.0
+ * @Version 2.1.1
  */
 
 
@@ -36,8 +36,6 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
     m_leftMotor = new CANSparkMax(M_CLIMBINGLEFT_MOTOR_ID, MotorType.kBrushless);
     m_leftMotor.setInverted(false);
     m_rightMotor.setInverted(true);
-    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-    m_leftMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
   }
   
   /**
@@ -66,13 +64,13 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
   }
   
   public void breakMode(){
-    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
     m_leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
   }
 
   public void coastMode(){
-    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
     m_leftMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
   }
   @Override
   public void periodic() {}
