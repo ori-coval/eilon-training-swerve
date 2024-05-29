@@ -1,7 +1,7 @@
 /**
  * This subsystem is resposible for the "climbing"
  * @arthur Eilon.h
- * @Version 2.1.2
+ * @Version 2.1.3
  */
 
 
@@ -39,6 +39,9 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
 
     m_rightMotor.setSmartCurrentLimit(R_CURRENT_LIMIT);
     m_leftMotor.setSmartCurrentLimit(L_CURRENT_LIMIT);
+
+    m_leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
   }
   
   /**
@@ -64,16 +67,6 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
     m_leftMotor.set(leftMotorSpeed.getAsDouble());
     m_rightMotor.set(rightMotorSpeed.getAsDouble());
   });    
-  }
-  
-  public void breakMode(){
-    m_leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-  }
-
-  public void coastMode(){
-    m_leftMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
   }
   @Override
   public void periodic() {}
