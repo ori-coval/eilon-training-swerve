@@ -32,25 +32,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   private IntakeSubsystem() {
     m_motor = new TalonFX(MOTOR_ID, Constants.CAN_BUS_NAME);
     m_opticSensor = new DigitalInput(OPTIC_SENSOR_ID);
-
-    TalonFXConfiguration motorConfig = new TalonFXConfiguration(); //configs
-
-    motorConfig.CurrentLimits.SupplyCurrentLimit = CURRENT_LIMIT;
-    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = LIMIT_ENABLE;
-    motorConfig.CurrentLimits.SupplyCurrentThreshold = CURRENT_THRESHOLD;
-    motorConfig.CurrentLimits.SupplyTimeThreshold = TIME_THRESHOLD;
-    motorConfig.MotorOutput.Inverted = MOTOR_DIRECTION;
-    motorConfig.MotorOutput.NeutralMode = NEUTRAL_MODE_VALUE;
-
-    //upload configs to motor
-    StatusCode statusCode = StatusCode.StatusCodeNotInitialized;
-    for (int i = 0; i < 5; i++){
-      m_motor.getConfigurator().apply(motorConfig);
-      if (statusCode.isOK())
-        break;
-    }
-    if (!statusCode.isOK())
-      System.out.println("Intake could not apply config, error code:" + statusCode.toString());
+    configs();
   }
 
   /**
@@ -105,5 +87,25 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
 
   @Override
   public void periodic() {
+  }
+  private void configs(){
+    TalonFXConfiguration motorConfig = new TalonFXConfiguration(); //configs
+
+    motorConfig.CurrentLimits.SupplyCurrentLimit = CURRENT_LIMIT;
+    motorConfig.CurrentLimits.SupplyCurrentLimitEnable = LIMIT_ENABLE;
+    motorConfig.CurrentLimits.SupplyCurrentThreshold = CURRENT_THRESHOLD;
+    motorConfig.CurrentLimits.SupplyTimeThreshold = TIME_THRESHOLD;
+    motorConfig.MotorOutput.Inverted = MOTOR_DIRECTION;
+    motorConfig.MotorOutput.NeutralMode = NEUTRAL_MODE_VALUE;
+
+    //upload configs to motor
+    StatusCode statusCode = StatusCode.StatusCodeNotInitialized;
+    for (int i = 0; i < 5; i++){
+      m_motor.getConfigurator().apply(motorConfig);
+      if (statusCode.isOK())
+        break;
+    }
+    if (!statusCode.isOK())
+      System.out.println("Intake could not apply config, error code:" + statusCode.toString());
   }
 }
