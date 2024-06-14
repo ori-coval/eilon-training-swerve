@@ -26,7 +26,6 @@ package frc.robot.subsystem.Vision;
 
 import java.util.Optional;
 
-import org.opencv.photo.Photo;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -45,17 +44,16 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Robot;
 
-public class AprilTagCamera implements VisionConstants{
+public class Hi implements VisionConstants{
     private PhotonCamera camera;
     private PhotonPoseEstimator photonEstimator;
     private double lastEstTimestamp = 0;
 
-    
     // Simulation
     private PhotonCameraSim cameraSim;
     private VisionSystemSim visionSim;
 
-    public AprilTagCamera (String cameraNmame){
+    public Hi (String cameraNmame){
         camera = new PhotonCamera(cameraNmame);
 
         // stratagy/ idk how to write its 23:05 leave me alone 
