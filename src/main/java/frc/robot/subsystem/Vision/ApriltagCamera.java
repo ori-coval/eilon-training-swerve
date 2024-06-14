@@ -49,6 +49,7 @@ public class AprilTagCamera implements VisionConstants{
     private PhotonCamera camera;
     private PhotonPoseEstimator photonEstimator;
     private double lastEstTimestamp = 0;
+
     
     // Simulation
     private PhotonCameraSim cameraSim;
