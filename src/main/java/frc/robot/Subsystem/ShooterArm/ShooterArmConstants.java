@@ -28,7 +28,7 @@ public interface ShooterArmConstants {
     double BACKWARD_LIMIT = -1;
 
     MotionMagicVoltage MOTION_MAGIC_VOLTAGE = new MotionMagicVoltage(0,
-    false,
+    true,
     0.0,
     0,
     true,
@@ -37,4 +37,5 @@ public interface ShooterArmConstants {
 
     // Condition Constants
     double MINIMUM_ERROR = 1;
+    double RESET_SPEED = -0.1;
 }
