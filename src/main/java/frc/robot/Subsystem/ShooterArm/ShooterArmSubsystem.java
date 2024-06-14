@@ -81,11 +81,19 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
     m_shooterArmMotor.set(speed);
   }
 
+  public void coast() {
+    m_shooterArmMotor.setNeutralMode(NeutralModeValue.Coast);
+  }
+
+  public void breakMode() {
+    m_shooterArmMotor.setNeutralMode(NeutralModeValue.Brake);
+  }
 
   /**
    * Reset the arm
    */
   public void manualZeroShooterArm() {
+    coast();
     if (getSwitch()) {
       while (getSwitch()) {
       }
@@ -94,6 +102,7 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
     }
     SmartDashboard.putBoolean("zerod out shooter", true);
     setPosition(0);
+    breakMode();
   }
   public boolean getReverseLimit() {//TODO: change irl to make this correct
     return !m_limitSwitch.get();//m_Motor.getReverseLimit().getValue() == lIMIT_SWITCH_TRUE_VALUE;
