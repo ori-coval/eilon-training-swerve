@@ -11,10 +11,8 @@ import com.revrobotics.CANSparkMax;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -34,14 +32,13 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
   private ClimbSubsystem() {
     m_rightMotor = new CANSparkMax(M_CLIMBING_RIGHT_MOTOR_ID, MotorType.kBrushless);
     m_leftMotor = new CANSparkMax(M_CLIMBING_LEFT_MOTOR_ID, MotorType.kBrushless);
-    m_leftMotor.setInverted(false);
-    m_rightMotor.setInverted(true);
 
-    m_rightMotor.setSmartCurrentLimit(CURRENT_LIMIT);
-    m_leftMotor.setSmartCurrentLimit(CURRENT_LIMIT);
+    configs();
+  }
 
-    m_leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+  public DoubleSupplier getSpeed()
+  {
+    return (() -> m_rightMotor.getAppliedOutput());
   }
   
   /**
@@ -66,8 +63,20 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
   return run(() ->{
     m_leftMotor.set(leftMotorSpeed.getAsDouble());
     m_rightMotor.set(rightMotorSpeed.getAsDouble());
-  });    
+  });
   }
+
   @Override
   public void periodic() {}
+
+  private void configs(){
+     m_leftMotor.setInverted(false);
+    m_rightMotor.setInverted(true);
+
+    m_rightMotor.setSmartCurrentLimit(CURRENT_LIMIT);
+    m_leftMotor.setSmartCurrentLimit(CURRENT_LIMIT);
+
+    m_leftMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    m_rightMotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+  }
 }

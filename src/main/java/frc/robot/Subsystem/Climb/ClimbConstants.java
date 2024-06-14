@@ -7,4 +7,5 @@ public interface ClimbConstants {
     int CURRENT_LIMIT = 40;
     
     
+    
 }
