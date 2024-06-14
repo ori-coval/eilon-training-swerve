@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystem.Vision.Hi;
+import frc.robot.subsystem.Vision.AprilTagCamera;
 import frc.robot.subsystem.Vision.VisionConstants;
 
 /**
@@ -51,8 +51,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return INSTANCE;
     }
 
-    private Hi rightAprilTagCamera = new Hi(VisionConstants.K_RIGHT_CAMERA_NAME);
-    private Hi leftAprilTagCamera = new Hi(VisionConstants.K_LEFT_CAMERA_NAME);
+    private AprilTagCamera rightAprilTagCamera = new AprilTagCamera(VisionConstants.K_RIGHT_CAMERA_NAME);
+    private AprilTagCamera leftAprilTagCamera = new AprilTagCamera(VisionConstants.K_LEFT_CAMERA_NAME);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private final Rotation2d BlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
