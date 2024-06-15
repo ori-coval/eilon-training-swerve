@@ -8,15 +8,17 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase implements ShooterConstants{
   private TalonFX m_upMotor;
   private TalonFX m_downMotor;
-  private final MotionMagicExpoTorqueCurrentFOC mm = new MotionMagicExpoTorqueCurrentFOC(0);
+  private final MotionMagicVelocityTorqueCurrentFOC mm = new MotionMagicVelocityTorqueCurrentFOC(0);
 
   //singelton
   private static Shooter instance;
@@ -98,5 +100,42 @@ public class Shooter extends SubsystemBase implements ShooterConstants{
     }
     if (!statusCode.isOK())
       System.out.println("Shooter Arm could not apply config, error code:" + statusCode.toString());
-  }
+ }
+    /**
+     * set the up motor at a given speed 
+     * @param speed
+     */
+    public void setSpeedUp(double speed){
+        m_upMotor.setControl(mm.withVelocity(speed));
+    }
+    /**
+     * set the down motor at a given speed 
+     * @param speed
+     */
+    public void setSpeedDown(double speed){
+        m_downMotor.setControl(mm.withVelocity(speed));
+    }
+    /**
+     * set both motors at a given speed 
+     * @param speed
+     * @return runOnce Command
+     */
+    public Command shoot(double speed){
+        return runOnce(() -> {
+            setSpeedUp(speed);
+            setSpeedDown(speed);
+        });
+    }
+    /**
+     * set both motos a a constants speed
+     * @return runOnce Command
+     */
+    public Command shoot(){
+        return runOnce(() -> {
+            setSpeedUp(SHOOT_SPEED);
+            setSpeedDown(SHOOT_SPEED);
+        });
+    }
+
+
 }

@@ -26,5 +26,7 @@ public interface ShooterConstants {
     //limits
     double CURRENT_LIMIT = 0;
 
+    double SHOOT_SPEED = 0;
+
     
 }
