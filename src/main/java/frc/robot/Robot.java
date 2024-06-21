@@ -132,11 +132,11 @@ new com.ctre.phoenix6.hardware.TalonFX(8, Constants.CAN_BUS_NAME), };
         ArrayList<TalonFX> _instruments = new ArrayList<TalonFX>();
       
         /* Initialize the TalonFX's to be used */
+        _orchestra = new Orchestra();
         for (int i = 0; i < _fxes.length; ++i) {
             _orchestra.addInstrument(_fxes[i]);
         }
         /* Create the orchestra with the TalonFX instruments */
-        _orchestra = new Orchestra();
         _joy = new Joystick(0);
     }
     
