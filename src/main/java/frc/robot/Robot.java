@@ -74,10 +74,12 @@ new com.ctre.phoenix6.hardware.TalonFX(8, Constants.CAN_BUS_NAME), };
     "song9.chrp", /* the remaining songs play better with three or more FXs */
     "song10.chrp",
     "song11.chrp",
+    "song12.chrp",
+    "song13.chrp"
   };
 
     /* track which song is selected for play */
-    int _songSelection = 0;
+    int _songSelection = 12;
 
     /* overlapped actions */
     int _timeToPlayLoops = 0;
