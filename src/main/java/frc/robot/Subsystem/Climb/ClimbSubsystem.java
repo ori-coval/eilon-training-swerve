@@ -4,7 +4,6 @@
  * @Version 2.1.4
  */
 
-
 package frc.robot.Subsystem.Climb;
 
 import com.revrobotics.CANSparkMax;
@@ -16,13 +15,14 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
+public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
   private CANSparkMax m_rightMotor;
   private CANSparkMax m_leftMotor;
-  
+
   private static ClimbSubsystem instance; // singelton
-  public static ClimbSubsystem getInstance(){ 
-    if (instance == null){
+
+  public static ClimbSubsystem getInstance() {
+    if (instance == null) {
       instance = new ClimbSubsystem();
     }
     return instance;
@@ -36,16 +36,16 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
     configs();
   }
 
-  public DoubleSupplier getSpeed()
-  {
-    return (() -> m_rightMotor.getAppliedOutput());
+  public DoubleSupplier getRightSpeed() {
+    return (() -> m_rightMotor.get());
   }
-  
+
   /**
    * set the speed of both motors
-   * @param speed electrecity between -1 to 1 
+   * 
+   * @param speed electrecity between -1 to 1
    */
-  public Command moveClimb(DoubleSupplier speed){
+  public Command moveClimb(DoubleSupplier speed) {
     return run(() -> {
       m_leftMotor.set(speed.getAsDouble());
       m_rightMotor.set(speed.getAsDouble());
@@ -53,24 +53,27 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants{
   }
 
   /**
-   * Creates a command that makes the climb motors move with custom left and right speeds.
+   * Creates a command that makes the climb motors move with custom left and right
+   * speeds.
    *
-   * @param  leftSpeed  a DoubleSupplier that provides the speed for the left motor
-   * @param  rightSpeed a DoubleSupplier that provides the speed for the right motor
-   * @return            a Command that moves the climb motors with the provided speeds
+   * @param leftSpeed  a DoubleSupplier that provides the speed for the left motor
+   * @param rightSpeed a DoubleSupplier that provides the speed for the right
+   *                   motor
+   * @return a Command that moves the climb motors with the provided speeds
    */
-  public Command moveClimb(DoubleSupplier rightMotorSpeed, DoubleSupplier leftMotorSpeed){
-  return run(() ->{
-    m_leftMotor.set(leftMotorSpeed.getAsDouble());
-    m_rightMotor.set(rightMotorSpeed.getAsDouble());
-  });
+  public Command moveClimb(DoubleSupplier leftMotorSpeed, DoubleSupplier rightMotorSpeed) {
+    return run(() -> {
+      m_leftMotor.set(leftMotorSpeed.getAsDouble());
+      m_rightMotor.set(rightMotorSpeed.getAsDouble());
+    });
   }
 
   @Override
-  public void periodic() {}
+  public void periodic() {
+  }
 
-  private void configs(){
-     m_leftMotor.setInverted(false);
+  private void configs() {
+    m_leftMotor.setInverted(false);
     m_rightMotor.setInverted(true);
 
     m_rightMotor.setSmartCurrentLimit(CURRENT_LIMIT);
