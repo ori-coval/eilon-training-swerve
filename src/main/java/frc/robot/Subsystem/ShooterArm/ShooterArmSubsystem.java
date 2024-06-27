@@ -31,6 +31,7 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
   private final MotionMagicExpoTorqueCurrentFOC mm = new MotionMagicExpoTorqueCurrentFOC(0);
   private final DigitalInput m_limitSwitch = new DigitalInput(SWITCH_ID);
 
+  // singelton
   private static ShooterArmSubsystem instance;
   public static ShooterArmSubsystem getInstance(){
     if (instance == null)
@@ -38,7 +39,9 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
     return instance;
   }
 
-  /** Creates a new ShooterArmSubsystem. */
+  /**
+   * Constructor
+   */
   private ShooterArmSubsystem() {
     m_shooterArmMotor = new TalonFX(SHOOTER_ARM_ID, Constants.CAN_BUS_NAME); // crearts new motor
     configs();
@@ -114,8 +117,7 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
    * 
    * @return The command
    */
-  private Command prepareHomeCommand() {
-
+  public Command prepareHomeCommand() {
     return !getReverseLimit()
         ? Commands.none()
         : (runOnce(() -> m_shooterArmMotor.set(-RESET_SPEED * 3)).andThen(Commands.waitUntil(() -> !getReverseLimit())))
@@ -155,8 +157,9 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
     configuration.Slot0.kS = KS;
 
   //Peeks:
-    configuration.Voltage.PeakForwardVoltage = PEEK_FORWARD_VOLTAGE;
-    configuration.Voltage.PeakReverseVoltage = PEEK_REVERSE_VOLTAGE;
+    configuration.CurrentLimits.SupplyCurrentLimitEnable = true;
+    configuration.CurrentLimits.SupplyCurrentLimit = PEAK_CURRENT;
+
 
     // forward and backward limits 
     configuration.SoftwareLimitSwitch.ForwardSoftLimitEnable = false;

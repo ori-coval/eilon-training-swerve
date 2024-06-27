@@ -21,8 +21,7 @@ public interface ShooterArmConstants {
     double KA = 0.001121;
     double KV = 0.13707;
 
-    double PEEK_FORWARD_VOLTAGE = 11.5;
-    double PEEK_REVERSE_VOLTAGE = -11.5;
+    double PEAK_CURRENT = 0; //TODO: Find out what this is
 
     double FOWORD_LIMIT = 80;
     double BACKWARD_LIMIT = -1;
