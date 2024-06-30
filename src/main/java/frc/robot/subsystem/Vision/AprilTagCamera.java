@@ -26,7 +26,6 @@ package frc.robot.subsystem.Vision;
 
 import java.util.Optional;
 
-import org.opencv.photo.Photo;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -49,7 +48,7 @@ public class AprilTagCamera implements VisionConstants{
     private PhotonCamera camera;
     private PhotonPoseEstimator photonEstimator;
     private double lastEstTimestamp = 0;
-    
+
     // Simulation
     private PhotonCameraSim cameraSim;
     private VisionSystemSim visionSim;
