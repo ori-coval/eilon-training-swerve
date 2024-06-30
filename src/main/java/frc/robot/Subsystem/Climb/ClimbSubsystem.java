@@ -36,10 +36,6 @@ public class ClimbSubsystem extends SubsystemBase implements ClimbConstants {
     configs();
   }
 
-  public DoubleSupplier getRightSpeed() {
-    return (() -> m_rightMotor.get());
-  }
-
   /**
    * set the speed of both motors
    * 
