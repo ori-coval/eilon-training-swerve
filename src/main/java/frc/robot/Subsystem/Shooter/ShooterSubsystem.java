@@ -20,7 +20,7 @@ import frc.robot.Constants;
 public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
   private TalonFX m_upMotor;
   private TalonFX m_downMotor;
-  private final MotionMagicVelocityTorqueCurrentFOC mm = new MotionMagicVelocityTorqueCurrentFOC(0);
+  private final MotionMagicVelocityTorqueCurrentFOC mmVel = new MotionMagicVelocityTorqueCurrentFOC(0);
 
   //singelton
   private static ShooterSubsystem instance;
@@ -42,21 +42,21 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
      * @param speed
      */
     public void setSpeedUp(double speed){
-        m_upMotor.setControl(mm.withVelocity(speed));
+        m_upMotor.setControl(mmVel.withVelocity(speed));
     }
     /**
      * set the down motor at a given speed 
      * @param speed
      */
     public void setSpeedDown(double speed){
-        m_downMotor.setControl(mm.withVelocity(speed));
+        m_downMotor.setControl(mmVel.withVelocity(speed));
     }
     /**
      * set both motors at a given speed 
      * @param speed
      * @return runOnce Command
      */
-    public Command setSpeed(double speed){
+    public Command setShootingSpeed(double speed){
         return runOnce(() -> {
             setSpeedUp(speed);
             setSpeedDown(speed);
@@ -66,7 +66,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
      * set both motos a a constants speed
      * @return runOnce Command
      */
-    public Command setSpeed(){
+    public Command setShootingSpeed(){
         return runOnce(() -> {
             setSpeedUp(SHOOT_FAR_SPEED);
             setSpeedDown(SHOOT_FAR_SPEED);
@@ -77,7 +77,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
      *
      * @return true if the up motor velocity is less than the minimum error, false otherwise
      */
-    public boolean isUpReady(double speed){
+    public boolean isUpAtVelocity(double speed){
         return (Math.abs(m_upMotor.getVelocity().getValue()- speed) < MINIMUM_ERROR);
     }
 
@@ -87,8 +87,18 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
      * @param  speed   the speed to compare the down motor velocity with
      * @return         true if the down motor velocity is close to the given speed within an error margin, false otherwise
      */
-    public boolean isDownReady(double speed){
+    public boolean isDownAtVelocity(double speed){
         return (Math.abs(m_downMotor.getVelocity().getValue()- speed) < MINIMUM_ERROR);
+    }
+
+    /**
+     * Check if both up and down motors are ready based on their velocities.
+     *
+     * @param  speed   the speed to compare both motor velocities with
+     * @return         true if both motors' velocities are close to the given speed within an error margin, false otherwise
+     */
+    public boolean isBothAtVelocity(double speed){
+        return (isUpAtVelocity(speed) && isDownAtVelocity(speed));
     }
 
   @Override
@@ -99,18 +109,18 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
     var talonFXConfigs = new TalonFXConfiguration();
     // set slot 0 gains
     var slot0Configs = talonFXConfigs.Slot0;
-    slot0Configs.kS = UP_KS; // Add 0.25 V output to overcome static friction
-    slot0Configs.kA = UP_KA; // An acceleration of 1 rps/s requires 0.01 V output
-    slot0Configs.kP = UP_KP; // An error of 1 rps results in 0.11 V output
-    slot0Configs.kI = UP_KI; // no output for integrated error
-    slot0Configs.kD = UP_KD; // no output for error derivative
+    slot0Configs.kS = UP_KS; 
+    slot0Configs.kA = UP_KA; 
+    slot0Configs.kP = UP_KP; 
+    slot0Configs.kI = UP_KI; 
+    slot0Configs.kD = UP_KD; 
 
     talonFXConfigs.Feedback.SensorToMechanismRatio = SENSOR_TO_MEC_RATIO; // set sensor to mechanism ratio
 
     // set Motion Magic Velocity settings
     var motionMagicConfigs = talonFXConfigs.MotionMagic;
-    motionMagicConfigs.MotionMagicAcceleration = ACCELERATION; // Target acceleration of 400 rps/s (0.25 seconds to max)
-    motionMagicConfigs.MotionMagicJerk = JERK; // Target jerk of 4000 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicAcceleration = ACCELERATION; 
+    motionMagicConfigs.MotionMagicJerk = JERK; 
 
     //Limits
     var limitConfigs = new CurrentLimitsConfigs();
@@ -135,18 +145,18 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
     var talonFXConfigs = new TalonFXConfiguration();
     // set slot 0 gains
     var slot0Configs = talonFXConfigs.Slot0;
-    slot0Configs.kS = DOWN_KS; // Add 0.25 V output to overcome static friction
-    slot0Configs.kA = DOWN_KA; // An acceleration of 1 rps/s requires 0.01 V output
-    slot0Configs.kP = DOWN_KP; // An error of 1 rps results in 0.11 V output
-    slot0Configs.kI = DOWN_KI; // no output for integrated error
-    slot0Configs.kD = DOWN_KD; // no output for error derivative
+    slot0Configs.kS = DOWN_KS; 
+    slot0Configs.kA = DOWN_KA; 
+    slot0Configs.kP = DOWN_KP; 
+    slot0Configs.kI = DOWN_KI; 
+    slot0Configs.kD = DOWN_KD; 
 
     talonFXConfigs.Feedback.SensorToMechanismRatio = SENSOR_TO_MEC_RATIO; // set sensor to mechanism ratio
 
     // set Motion Magic Velocity settings
     var motionMagicConfigs = talonFXConfigs.MotionMagic;
-    motionMagicConfigs.MotionMagicAcceleration = ACCELERATION; // Target acceleration of 400 rps/s (0.25 seconds to max)
-    motionMagicConfigs.MotionMagicJerk = JERK; // Target jerk of 4000 rps/s/s (0.1 seconds)
+    motionMagicConfigs.MotionMagicAcceleration = ACCELERATION; 
+    motionMagicConfigs.MotionMagicJerk = JERK; 
 
     //Limits
     var limitConfigs = new CurrentLimitsConfigs();
