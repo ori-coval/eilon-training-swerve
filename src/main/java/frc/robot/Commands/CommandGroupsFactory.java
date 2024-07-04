@@ -4,10 +4,13 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
+import frc.robot.RobotContainer;
 import frc.robot.Subsystem.Climb.ClimbSubsystem;
 import frc.robot.Subsystem.Intake.IntakeSubsystem;
 import frc.robot.Subsystem.Shooter.ShooterConstants;
@@ -19,6 +22,9 @@ import frc.robot.Subsystem.swerve.TunerConstants;
 
 public class CommandGroupsFactory {
     private static boolean climbing = false;// are we climbing or intaking
+
+    private static final CommandXboxController driverJoystick = RobotContainer.driverJoystick;
+    private static final CommandXboxController operatorJoystick = RobotContainer.operatorJoystick;
 
     private static final CommandSwerveDrivetrain swerve = TunerConstants.Swerve; // My drivetrain
     private static final ShooterSubsystem shooter = ShooterSubsystem.getInstance();
@@ -36,13 +42,36 @@ public class CommandGroupsFactory {
     public static SwerveRequest.FieldCentricFacingAngle driveAlignedToSpeaker = new SwerveRequest.FieldCentricFacingAngle()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) 
             .withDriveRequestType(DriveRequestType.Velocity);
-
+    //swerve commands
+    public static Command getDriveAlignedToSpeakerCommand() {//TODO: target direction
+        return swerve.applyRequest(() -> driveAlignedToSpeaker
+                .withVelocityX(-driverJoystick.getLeftY() * MaxSpeed)
+                .withVelocityY(-driverJoystick.getLeftX() * MaxSpeed)
+                .withTargetDirection(null))
+                .ignoringDisable(true);
+    }
+    
+    public static Command getTeleopDriveCommand() {
+        return swerve.applyRequest(() -> teleopDrive.withVelocityX(-driverJoystick.getLeftY() * MaxSpeed)
+                .withVelocityY(-driverJoystick.getLeftX() * MaxSpeed)
+                .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate))
+                .ignoringDisable(true);
+    }
+    /**
+     * shoot from base with out camera or swerve
+     */
     public static Command getShootBaseCommand(){
         return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)//until 1 rio cycle is complted
-        .andThen(Commands.waitUntil(() -> shooter.isDownReady(ShooterConstants.SHOOT_CLOSE_SPEED) && shooter.isUpReady(ShooterConstants.SHOOT_FAR_SPEED) && shooterArm.isArmReady())
+        .andThen(Commands.waitUntil(() -> shooter.isBothAtVelocity(ShooterConstants.SHOOT_CLOSE_SPEED) && shooterArm.isArmReady())
         .andThen(() -> intake.feedShooterCommand())), // feed the note to the Shooter
-         shooterArm.moveArmTo(0),//constants
-         shooter.setSpeed());
+         shooterArm.moveArmTo(0),//TODO:constants
+         shooter.setShootingSpeed(ShooterConstants.SHOOT_CLOSE_SPEED));
+    }
+    public static Command getShootSpeakerCommand(){
+        return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)//until 1 rio cycle is complted
+        .andThen(Commands.waitUntil(() -> shooter.isBothAtVelocity(ShooterConstants.SHOOT_CLOSE_SPEED) && shooterArm.isArmReady())
+        .andThen(() -> intake.feedShooterCommand())) // feed the note to the Shooter
+        , new InstantCommand(() -> swerve.setDefaultCommand(getDriveAlignedToSpeakerCommand())));
     }
 
 }
