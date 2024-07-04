@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package frc.robot.subsystem.Vision;
+package frc.robot.Subsystem.Vision;
 
 import java.util.Optional;
 

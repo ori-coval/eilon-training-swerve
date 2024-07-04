@@ -1,4 +1,4 @@
-package frc.robot.subsystem;
+package frc.robot.Subsystem;
 
 
 import org.photonvision.PhotonCamera;

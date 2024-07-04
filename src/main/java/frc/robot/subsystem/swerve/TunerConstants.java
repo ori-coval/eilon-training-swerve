@@ -1,4 +1,4 @@
-package frc.robot.subsystem.swerve;
+package frc.robot.Subsystem.swerve;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
