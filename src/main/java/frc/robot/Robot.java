@@ -1,6 +1,6 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// the WPILib BSD license file in the root directory of this project
 
 package frc.robot;
 
@@ -21,7 +21,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
-    m_robotContainer.drivetrain.getDaqThread().setThreadPriority(99);
+    m_robotContainer.swerve.getDaqThread().setThreadPriority(99);
   }
   @Override
   public void robotPeriodic() {
@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
       Pose2d llPose = lastResult.getBotPose2d_wpiBlue();
 
       if (lastResult.valid) {
-        m_robotContainer.drivetrain.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
+        m_robotContainer.swerve.addVisionMeasurement(llPose, Timer.getFPGATimestamp());
       }
     }
   }
