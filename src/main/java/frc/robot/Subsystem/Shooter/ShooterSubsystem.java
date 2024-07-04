@@ -72,6 +72,24 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
             setSpeedDown(SHOOT_FAR_SPEED);
         });
     }
+    /**
+     * Check if the up motor is ready based on its velocity.
+     *
+     * @return true if the up motor velocity is less than the minimum error, false otherwise
+     */
+    public boolean isUpReady(double speed){
+        return (Math.abs(m_upMotor.getVelocity().getValue()- speed) < MINIMUM_ERROR);
+    }
+
+    /**
+     * Compute if the down motor is ready based on its velocity.
+     *
+     * @param  speed   the speed to compare the down motor velocity with
+     * @return         true if the down motor velocity is close to the given speed within an error margin, false otherwise
+     */
+    public boolean isDownReady(double speed){
+        return (Math.abs(m_downMotor.getVelocity().getValue()- speed) < MINIMUM_ERROR);
+    }
 
   @Override
   public void periodic() {

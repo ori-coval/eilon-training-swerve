@@ -31,5 +31,7 @@ public interface ShooterConstants {
     double SHOOT_FAR_SPEED = 70;
     double SENSOR_TO_MEC_RATIO = 0.5;
 
+    double MINIMUM_ERROR = 5; 
+
     
 }
