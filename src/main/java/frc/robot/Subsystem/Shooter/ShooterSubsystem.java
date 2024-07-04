@@ -11,6 +11,7 @@ import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -55,7 +56,7 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
      * @param speed
      * @return runOnce Command
      */
-    public Command shoot(double speed){
+    public Command setSpeed(double speed){
         return runOnce(() -> {
             setSpeedUp(speed);
             setSpeedDown(speed);
@@ -65,10 +66,10 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
      * set both motos a a constants speed
      * @return runOnce Command
      */
-    public Command shoot(){
+    public Command setSpeed(){
         return runOnce(() -> {
-            setSpeedUp(SHOOT_SPEED);
-            setSpeedDown(SHOOT_SPEED);
+            setSpeedUp(SHOOT_FAR_SPEED);
+            setSpeedDown(SHOOT_FAR_SPEED);
         });
     }
 
@@ -86,6 +87,8 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
     slot0Configs.kI = UP_KI; // no output for integrated error
     slot0Configs.kD = UP_KD; // no output for error derivative
 
+    talonFXConfigs.Feedback.SensorToMechanismRatio = SENSOR_TO_MEC_RATIO; // set sensor to mechanism ratio
+
     // set Motion Magic Velocity settings
     var motionMagicConfigs = talonFXConfigs.MotionMagic;
     motionMagicConfigs.MotionMagicAcceleration = ACCELERATION; // Target acceleration of 400 rps/s (0.25 seconds to max)
@@ -96,6 +99,9 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
     // enable stator current limit
     limitConfigs.StatorCurrentLimit = CURRENT_LIMIT;
     limitConfigs.StatorCurrentLimitEnable = true;
+
+    talonFXConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive; // invert motor output
+    talonFXConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;// set motor to coast mode
 
     //upload configs to motor
     StatusCode statusCode = StatusCode.StatusCodeNotInitialized;
@@ -117,6 +123,8 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
     slot0Configs.kI = DOWN_KI; // no output for integrated error
     slot0Configs.kD = DOWN_KD; // no output for error derivative
 
+    talonFXConfigs.Feedback.SensorToMechanismRatio = SENSOR_TO_MEC_RATIO; // set sensor to mechanism ratio
+
     // set Motion Magic Velocity settings
     var motionMagicConfigs = talonFXConfigs.MotionMagic;
     motionMagicConfigs.MotionMagicAcceleration = ACCELERATION; // Target acceleration of 400 rps/s (0.25 seconds to max)
@@ -127,6 +135,9 @@ public class ShooterSubsystem extends SubsystemBase implements ShooterConstants{
     // enable stator current limit
     limitConfigs.StatorCurrentLimit = CURRENT_LIMIT;
     limitConfigs.StatorCurrentLimitEnable = true;
+
+    talonFXConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive; // invert motor output
+    talonFXConfigs.MotorOutput.NeutralMode = NeutralModeValue.Coast;// set motor to coast mode
 
     //upload configs to motor
     StatusCode statusCode = StatusCode.StatusCodeNotInitialized;

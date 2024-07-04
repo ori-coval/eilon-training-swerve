@@ -1,6 +1,7 @@
 package frc.robot.Subsystem.Shooter;
 
 public interface ShooterConstants {
+    //TODO: find it all
     int UP_MOTOR_ID = 0;
     int DOWN_MOTOR_ID = 0;
 
@@ -26,7 +27,9 @@ public interface ShooterConstants {
     //limits
     double CURRENT_LIMIT = 0;
 
-    double SHOOT_SPEED = 0;
+    double SHOOT_CLOSE_SPEED = 50;
+    double SHOOT_FAR_SPEED = 70;
+    double SENSOR_TO_MEC_RATIO = 0.5;
 
     
 }
