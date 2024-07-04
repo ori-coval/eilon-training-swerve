@@ -1,4 +1,4 @@
-package frc.robot.subsystem.swerve;
+package frc.robot.Subsystem.swerve;
 
 
 import static edu.wpi.first.units.Units.Volts;
@@ -25,8 +25,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.subsystem.Vision.AprilTagCamera;
-import frc.robot.subsystem.Vision.VisionConstants;
+import frc.robot.Subsystem.Vision.AprilTagCamera;
+import frc.robot.Subsystem.Vision.VisionConstants;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements
