@@ -5,6 +5,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -33,6 +34,7 @@ public class CommandGroupsFactory {
     private static final ClimbSubsystem climb = ClimbSubsystem.getInstance();
 
     private static double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+    private static double SlowSpeed = 0.3 * MaxSpeed;
     private static double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
     public static SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
@@ -42,6 +44,7 @@ public class CommandGroupsFactory {
     public static SwerveRequest.FieldCentricFacingAngle driveAlignedToSpeaker = new SwerveRequest.FieldCentricFacingAngle()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) 
             .withDriveRequestType(DriveRequestType.Velocity);
+
     //swerve commands
     public static Command getDriveAlignedToSpeakerCommand() {//TODO: target direction
         return swerve.applyRequest(() -> driveAlignedToSpeaker
@@ -52,11 +55,19 @@ public class CommandGroupsFactory {
     }
     
     public static Command getTeleopDriveCommand() {
-        return swerve.applyRequest(() -> teleopDrive.withVelocityX(-driverJoystick.getLeftY() * MaxSpeed)
-                .withVelocityY(-driverJoystick.getLeftX() * MaxSpeed)
-                .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate))
-                .ignoringDisable(true);
+        if (driverJoystick.rightBumper().getAsBoolean()){
+            return swerve.applyRequest(() -> teleopDrive.withVelocityX(-driverJoystick.getLeftY() * MaxSpeed)
+                    .withVelocityY(-driverJoystick.getLeftX() * MaxSpeed)
+                    .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate))
+                    .ignoringDisable(true);
+        }
+        return swerve.applyRequest(() -> teleopDrive.withVelocityX(-driverJoystick.getLeftY() * SlowSpeed)
+                    .withVelocityY(-driverJoystick.getLeftX() * SlowSpeed)
+                    .withRotationalRate(-driverJoystick.getRightX() * MaxAngularRate))
+                    .ignoringDisable(true);
+
     }
+    // shotter commands
     /**
      * shoot from base with out camera or swerve
      */
@@ -67,11 +78,30 @@ public class CommandGroupsFactory {
          shooterArm.moveArmTo(0),//TODO:constants
          shooter.setShootingSpeed(ShooterConstants.SHOOT_CLOSE_SPEED));
     }
+    /**
+     * shoot with camera and swerve
+     */
     public static Command getShootSpeakerCommand(){
         return new ParallelDeadlineGroup(Commands.waitSeconds(0.02)//until 1 rio cycle is complted
         .andThen(Commands.waitUntil(() -> shooter.isBothAtVelocity(ShooterConstants.SHOOT_CLOSE_SPEED) && shooterArm.isArmReady())
         .andThen(() -> intake.feedShooterCommand())) // feed the note to the Shooter
-        , new InstantCommand(() -> swerve.setDefaultCommand(getDriveAlignedToSpeakerCommand())));
+
+        , new InstantCommand(() -> swerve.setDefaultCommand(getDriveAlignedToSpeakerCommand())),
+        shooterArm.moveArmTo(0),//TODO:constants
+        shooter.setShootingSpeed(ShooterConstants.SHOOT_FAR_SPEED));
     }
+
+    public static Command getPrepareShooterToShootFar(){
+        return new ParallelCommandGroup(
+            shooterArm.moveArmTo(0),//TODO:interpolation
+            shooter.setShootingSpeed(ShooterConstants.SHOOT_FAR_SPEED));
+    }
+    public static Command getPrepareShooterToShootBase(){
+        return new ParallelCommandGroup(
+            shooterArm.moveArmTo(0),//TODO:constants
+            shooter.setShootingSpeed(ShooterConstants.SHOOT_CLOSE_SPEED));
+    }
+    //TODO: add clmbing commands
+
 
 }
