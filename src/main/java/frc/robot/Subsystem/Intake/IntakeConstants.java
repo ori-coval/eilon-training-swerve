@@ -1,4 +1,4 @@
-package frc.robot.Subsystem.Intake;
+package frc.robot.subsystem.Intake;
 
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;

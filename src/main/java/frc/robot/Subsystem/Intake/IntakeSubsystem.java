@@ -4,7 +4,7 @@
  * @Version 2.1.0
  */
 
-package frc.robot.Subsystem.Intake;
+package frc.robot.subsystem.Intake;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
