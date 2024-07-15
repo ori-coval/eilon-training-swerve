@@ -1,6 +1,7 @@
 package frc.robot.Commands;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.SteerRequestType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 
 import frc.robot.RobotContainer;
@@ -23,6 +25,7 @@ import frc.robot.Subsystem.swerve.TunerConstants;
 
 public class CommandGroupsFactory {
     private static boolean climbing = false;// are we climbing or intaking
+    private static MotionMagicExpoTorqueCurrentFOC mm = new MotionMagicExpoTorqueCurrentFOC(0);
 
     private static final CommandXboxController driverJoystick = RobotContainer.driverJoystick;
     private static final CommandXboxController operatorJoystick = RobotContainer.operatorJoystick;
@@ -39,11 +42,14 @@ public class CommandGroupsFactory {
 
     public static SwerveRequest.FieldCentric teleopDrive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1)
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); 
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+            .withSteerRequestType(SteerRequestType.MotionMagicExpo); 
 
     public static SwerveRequest.FieldCentricFacingAngle driveAlignedToSpeaker = new SwerveRequest.FieldCentricFacingAngle()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) 
-            .withDriveRequestType(DriveRequestType.Velocity);
+            .withDriveRequestType(DriveRequestType.Velocity)
+            .withSteerRequestType(SteerRequestType.MotionMagicExpo); 
+
 
     //swerve commands
     public static Command getDriveAlignedToSpeakerCommand() {//TODO: target direction
@@ -67,6 +73,22 @@ public class CommandGroupsFactory {
                     .ignoringDisable(true);
 
     }
+
+    /**
+     * switch between teleop and aligned
+     * @return
+     */
+    public static Command getSwitchDriveCommand(){
+        return new InstantCommand(() ->
+         {if (swerve.getDefaultCommand().getName() == getTeleopDriveCommand().getName()){
+            swerve.setDefaultCommand(getDriveAlignedToSpeakerCommand());
+         }else{
+            swerve.setDefaultCommand(getTeleopDriveCommand());
+         }
+        });
+    }
+
+
     // shotter commands
     /**
      * shoot from base with out camera or swerve
@@ -87,7 +109,7 @@ public class CommandGroupsFactory {
         .andThen(() -> intake.feedShooterCommand())) // feed the note to the Shooter
 
         , new InstantCommand(() -> swerve.setDefaultCommand(getDriveAlignedToSpeakerCommand())),
-        shooterArm.moveArmTo(0),//TODO:constants
+        shooterArm.moveArmTo(0),//TODO:interpolation
         shooter.setShootingSpeed(ShooterConstants.SHOOT_FAR_SPEED));
     }
 
@@ -101,7 +123,23 @@ public class CommandGroupsFactory {
             shooterArm.moveArmTo(0),//TODO:constants
             shooter.setShootingSpeed(ShooterConstants.SHOOT_CLOSE_SPEED));
     }
-    //TODO: add clmbing commands
+
+    /**
+     * switch between intake and climb
+    */
+    public static Command getSwitchIntakeClimbCommand(){
+        return new InstantCommand(() -> {
+            if (climbing){
+                climb.removeDefaultCommand();
+                intake.setDefaultCommand(intake.setSpeed(operatorJoystick.getLeftY()));
+            }else{
+                climb.setDefaultCommand(climb.moveClimb(() -> operatorJoystick.getLeftY(),() -> operatorJoystick.getRightY()));
+            }
+        });
+    }
+
+    //TODO: add a comand that instantly shot out the note and command that pass the note to another robot
+
 
 
 }
