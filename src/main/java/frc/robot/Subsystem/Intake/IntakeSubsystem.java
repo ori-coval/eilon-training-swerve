@@ -73,7 +73,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * @return
    */
   public Command intakeCommand(){
-    return runEnd(() -> setCurrent(INTAKE_CURRENT),() -> m_motor.stopMotor()).until(() -> getOpticSensorValue());
+    return startEnd(() -> setCurrent(INTAKE_CURRENT),() -> m_motor.stopMotor()).until(() -> getOpticSensorValue());
   }
 
   /**
@@ -81,7 +81,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
    * @return
    */
   public Command feedShooterCommand(){
-    return runEnd(() -> setCurrent(FEED_SHOOTER_CURRENT),() -> m_motor.stopMotor()).withTimeout(FEED_SHOOTER_TIME);
+    return startEnd(() -> setCurrent(FEED_SHOOTER_CURRENT),() -> m_motor.stopMotor()).withTimeout(FEED_SHOOTER_TIME);
   }
 
 
