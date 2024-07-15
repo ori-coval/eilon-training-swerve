@@ -13,7 +13,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Misc;
 
 public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
   private TalonFX m_motor;
@@ -30,7 +30,7 @@ public class IntakeSubsystem extends SubsystemBase implements IntakeConstants{
 
   /** Creates a new IntakeSubsystem. */
   private IntakeSubsystem() {
-    m_motor = new TalonFX(MOTOR_ID, Constants.CAN_BUS_NAME);
+    m_motor = new TalonFX(MOTOR_ID, Misc.CAN_BUS_NAME);
     m_opticSensor = new DigitalInput(OPTIC_SENSOR_ID);
     configs();
   }
