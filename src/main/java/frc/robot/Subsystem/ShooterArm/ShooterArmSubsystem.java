@@ -16,7 +16,7 @@ import com.ctre.phoenix6.signals.ForwardLimitValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import frc.robot.Constants;
+import frc.robot.Misc;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,7 +43,7 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
    * Constructor
    */
   private ShooterArmSubsystem() {
-    m_shooterArmMotor = new TalonFX(SHOOTER_ARM_ID, Constants.CAN_BUS_NAME); // crearts new motor
+    m_shooterArmMotor = new TalonFX(SHOOTER_ARM_ID, Misc.CAN_BUS_NAME); // crearts new motor
     configs();
   }
 
