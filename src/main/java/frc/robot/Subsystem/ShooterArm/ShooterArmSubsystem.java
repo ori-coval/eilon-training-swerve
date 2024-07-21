@@ -4,7 +4,7 @@
  * @Version 2.0.1
  */
 
-package frc.robot.Subsystem.ShooterArm;
+package frc.robot.subsystem.ShooterArm;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -17,6 +17,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import frc.robot.Misc;
+import frc.robot.util.exterpolation.ExterpolationMap;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmConstants{
   //
   private TalonFX m_shooterArmMotor;
-  private double targetPose = 0;
   private final MotionMagicExpoTorqueCurrentFOC mm = new MotionMagicExpoTorqueCurrentFOC(0);
   private final DigitalInput m_limitSwitch = new DigitalInput(SWITCH_ID);
 
@@ -65,7 +65,7 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
 
   
   public boolean isArmReady(){
-    return (Math.abs(getArmPose() - targetPose) < MINIMUM_ERROR);
+    return (Math.abs(getArmPose() - mm.Position) < MINIMUM_ERROR);
   }
 
   /**
@@ -93,6 +93,17 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
   }
 
   /**
+   * Create a command that will move the shooter arm to a specific angle based on
+   * the distance from the speaker
+   * 
+   * @param distance The distance from the speaker
+   * @return The command
+   */
+  public Command speakerAngleEterapolateCommand(double distance){
+    return runOnce(() -> moveArmTo(SPEAKER_ANGEL_EXTERPOLATION.exterpolate(distance)));
+  } 
+
+  /**
    * Reset the arm
    */
   public void manualZeroShooterArm() {
@@ -107,8 +118,8 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
     setPosition(0);
     breakMode();
   }
-  public boolean getReverseLimit() {//TODO: change irl to make this correct
-    return !m_limitSwitch.get();//m_Motor.getReverseLimit().getValue() == lIMIT_SWITCH_TRUE_VALUE;
+  public boolean getReverseLimit() {
+    return !m_limitSwitch.get();
   }
   /**
    * Prepare the home command, if the reverse limit switch is pressed, do
@@ -120,7 +131,7 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
   public Command prepareHomeCommand() {
     return !getReverseLimit()
         ? Commands.none()
-        : (runOnce(() -> m_shooterArmMotor.set(-RESET_SPEED * 3)).andThen(Commands.waitUntil(() -> !getReverseLimit())))
+        : (runOnce(() -> m_shooterArmMotor.set(RESET_SPEED)).andThen(Commands.waitUntil(() -> !getReverseLimit())))
             .withTimeout(3);
   }
   /**
@@ -129,11 +140,10 @@ public class ShooterArmSubsystem extends SubsystemBase implements ShooterArmCons
    * @return
    */
   public Command moveArmTo(double degree){
-    targetPose = degree;
     return runOnce(() -> m_shooterArmMotor.setControl(mm.withPosition(degree)));
 
   }
-  //TODO: Add speakerInterpolate 
+  
   
 
   @Override

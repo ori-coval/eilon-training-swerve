@@ -1,6 +1,8 @@
-package frc.robot.Subsystem.ShooterArm;
+package frc.robot.subsystem.ShooterArm;
 
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+
+import frc.robot.util.exterpolation.ExterpolationMap;
 
 public interface ShooterArmConstants {
     //Technical Constants
@@ -37,4 +39,10 @@ public interface ShooterArmConstants {
     // Condition Constants
     double MINIMUM_ERROR = 1;
     double RESET_SPEED = -0.1;
+
+    ExterpolationMap SPEAKER_ANGEL_EXTERPOLATION = new ExterpolationMap().put(2.9, 62.0)
+    .put(2.52, 55.0)
+    .put(2.15, 50.0)
+    .put(3.59, 63.0)
+    .put(3.04, 56.0); //TODO:update
 }
